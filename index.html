@@ -5,6 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rajukumar & Mugdha | Wedding Invitation</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<audio id="bg-music" src="music.mp3" loop autoplay playsinline preload="auto"></audio>
+<script>
+  (function () {
+    const music = document.getElementById('bg-music');
+    music.volume = 0.35;
+
+    function playWithSound() {
+      music.muted = false;
+      return music.play();
+    }
+
+    function startMusic() {
+      playWithSound().catch(function () {
+        music.muted = true;
+        music.play().then(function () {
+          music.muted = false;
+        }).catch(function () {});
+      });
+    }
+
+    startMusic();
+    music.addEventListener('loadeddata', startMusic);
+    music.addEventListener('canplay', startMusic);
+    document.addEventListener('DOMContentLoaded', startMusic);
+    window.addEventListener('load', startMusic);
+
+    var tries = 0;
+    var timer = setInterval(function () {
+      if (!music.paused && !music.muted) {
+        clearInterval(timer);
+        return;
+      }
+      if (tries++ > 20) {
+        clearInterval(timer);
+        return;
+      }
+      startMusic();
+    }, 400);
+
+    function unlockOnInteraction() {
+      music.muted = false;
+      music.play().catch(function () {});
+    }
+    document.addEventListener('click', unlockOnInteraction, { once: true, capture: true });
+    document.addEventListener('touchstart', unlockOnInteraction, { once: true, capture: true });
+  })();
+</script>
 <style>
   :root {
     --gold: #c9933a;
@@ -830,11 +877,6 @@
   </div><!-- /card-inner -->
 </div><!-- /invite-card -->
 
-<!-- ══════════════ AUDIO ══════════════ -->
-<audio id="bg-music" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
 <script>
   function openInvite() {
     const envScreen = document.getElementById('envelope-screen');
@@ -847,11 +889,6 @@
       card.style.display = 'block';
       spawnPetals();
     }, 800);
-
-    // Play music
-    const music = document.getElementById('bg-music');
-    music.volume = 0.35;
-    music.play().catch(() => {});
   }
 
   function spawnPetals() {
