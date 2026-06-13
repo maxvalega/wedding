@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rajukumar & Mugdha | Wedding Invitation</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Great+Vibes&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
 <audio id="bg-music" src="music.mp3" loop autoplay playsinline preload="auto"></audio>
 <script>
   (function () {
@@ -57,22 +57,27 @@
     --gold: #c9933a;
     --gold-light: #e8c06a;
     --gold-dark: #8b6520;
-    --cream: #fdf6e3;
+    --cream: #f3e8cf;
+    --cream-mask: #f0e6cc;
     --deep-brown: #3d1f00;
     --maroon: #7b1c1c;
-    --green: #2d5a27;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     background: #1a0a00;
-    font-family: 'EB Garamond', serif;
-    overflow-x: hidden;
-    min-height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  body.invite-open {
+    overflow: hidden;
   }
 
   /* ─── ENVELOPE SCREEN ─── */
@@ -83,120 +88,359 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(ellipse at center, #2a1400 0%, #0d0500 100%);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    overflow: hidden;
+    background: #0a0400;
+    transition: opacity 0.9s ease, transform 0.9s ease;
   }
 
   #envelope-screen.open {
     opacity: 0;
     pointer-events: none;
-    transform: scale(1.05);
+    transform: scale(1.04);
+  }
+
+  .env-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .env-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 45%, rgba(201,147,58,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(123,28,28,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(123,28,28,0.1) 0%, transparent 55%),
+      radial-gradient(ellipse at center, #2a1400 0%, #0d0500 70%, #050200 100%);
+  }
+
+  .env-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23e8c06a' stroke-width='0.6'%3E%3Ccircle cx='60' cy='60' r='28'/%3E%3Ccircle cx='60' cy='60' r='18'/%3E%3Cpath d='M60 32 L60 88 M32 60 L88 60 M40 40 L80 80 M80 40 L40 80'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 90px 90px;
+    animation: pattern-drift 40s linear infinite;
+  }
+
+  @keyframes pattern-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 90px 90px; }
+  }
+
+  .env-corner {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .env-corner svg { width: 100%; height: 100%; }
+  .env-corner.tl { top: 16px; left: 16px; }
+  .env-corner.tr { top: 16px; right: 16px; transform: scaleX(-1); }
+  .env-corner.bl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+  .env-corner.br { bottom: 16px; right: 16px; transform: scale(-1); }
+
+  .env-sparkle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    box-shadow: 0 0 6px var(--gold-light);
+    animation: sparkle 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50%       { opacity: 0.9; transform: scale(1.2); }
   }
 
   .envelope-wrap {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    gap: 0;
+    padding: 20px 24px;
+    animation: env-enter 1.2s ease forwards;
+  }
+
+  @keyframes env-enter {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .env-ganesh {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    color: var(--gold-light);
+    letter-spacing: 0.35em;
+    opacity: 0.75;
+    margin-bottom: 14px;
+  }
+
+  .env-lotus {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    animation: lotus-glow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(201,147,58,0.5));
+  }
+
+  @keyframes lotus-glow {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50%       { transform: scale(1.08); opacity: 1; }
   }
 
   .envelope-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cinzel', serif;
     color: var(--gold-light);
-    font-size: 1.1rem;
-    letter-spacing: 0.4em;
+    font-size: 0.72rem;
+    letter-spacing: 0.55em;
     text-transform: uppercase;
-    opacity: 0.85;
+    opacity: 0.9;
+    margin-bottom: 18px;
+  }
+
+  .env-couple {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.4rem, 9vw, 3.2rem);
+    color: var(--gold-light);
+    line-height: 1.1;
+    text-align: center;
+    text-shadow: 0 2px 20px rgba(201,147,58,0.4);
+    margin-bottom: 6px;
+  }
+
+  .env-couple span {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--gold);
+    margin: 0 6px;
+    vertical-align: middle;
+  }
+
+  .env-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(232,192,106,0.8);
+    letter-spacing: 0.15em;
+    margin-bottom: 22px;
+  }
+
+  .env-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    width: min(220px, 70vw);
+  }
+
+  .env-divider::before,
+  .env-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .env-divider span {
+    color: var(--gold);
+    font-size: 0.55rem;
+    animation: spin-slow 8s linear infinite;
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
   }
 
   .seal-container {
     position: relative;
     cursor: pointer;
-    width: 140px;
-    height: 140px;
+    width: 168px;
+    height: 168px;
+    margin-bottom: 30px;
+    animation: seal-float 4s ease-in-out infinite;
+  }
+
+  @keyframes seal-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+  }
+
+  .seal-container:hover { animation-play-state: paused; }
+  .seal-container:hover .seal {
+    transform: scale(1.06);
+    box-shadow: 0 0 60px rgba(201,147,58,0.7), 0 0 100px rgba(201,147,58,0.25), inset 0 2px 8px rgba(255,220,120,0.5);
   }
 
   .seal-ring {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    border: 2px solid var(--gold);
-    animation: pulse-ring 2.5s ease-in-out infinite;
+    border: 1px solid rgba(201,147,58,0.6);
+    animation: pulse-ring 3s ease-in-out infinite;
   }
 
-  .seal-ring:nth-child(2) { animation-delay: 0.8s; opacity: 0.5; }
+  .seal-ring:nth-child(2) { animation-delay: 1s; }
+  .seal-ring:nth-child(3) { animation-delay: 2s; inset: -12px; opacity: 0.3; }
 
   @keyframes pulse-ring {
-    0%   { transform: scale(1); opacity: 0.7; }
-    50%  { transform: scale(1.25); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
+    0%   { transform: scale(1); opacity: 0.6; }
+    70%  { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  .seal-outer {
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 2px dashed rgba(232,192,106,0.25);
+    animation: spin-slow 20s linear infinite reverse;
   }
 
   .seal {
     position: absolute;
-    inset: 10px;
+    inset: 14px;
     border-radius: 50%;
-    background: radial-gradient(circle at 40% 35%, #e8c06a, #c9933a 40%, #7a5010 100%);
+    background:
+      radial-gradient(circle at 35% 30%, #f0d080 0%, #d4a040 25%, #a07020 60%, #6a4810 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    box-shadow: 0 0 30px rgba(201,147,58,0.5), inset 0 2px 6px rgba(255,220,120,0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid var(--gold-light);
+    box-shadow:
+      0 0 40px rgba(201,147,58,0.55),
+      0 8px 24px rgba(0,0,0,0.4),
+      inset 0 3px 8px rgba(255,230,150,0.5),
+      inset 0 -4px 10px rgba(80,50,10,0.4);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 3px solid rgba(180,120,30,0.8);
+    overflow: hidden;
   }
 
-  .seal:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 50px rgba(201,147,58,0.8), inset 0 2px 6px rgba(255,220,120,0.4);
+  .seal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .seal::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,240,180,0.15) 50%, transparent 60%);
+    animation: seal-shimmer 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes seal-shimmer {
+    0%, 100% { transform: translateX(-30%) rotate(25deg); }
+    50%       { transform: translateX(30%) rotate(25deg); }
   }
 
   .seal-ganesha {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     line-height: 1;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+    position: relative;
+    z-index: 1;
   }
 
   .seal-text {
     font-family: 'Cinzel', serif;
-    font-size: 0.38rem;
-    letter-spacing: 0.15em;
-    color: var(--deep-brown);
+    font-size: 0.42rem;
+    letter-spacing: 0.18em;
+    color: rgba(40,20,0,0.85);
     text-transform: uppercase;
-    margin-top: 2px;
+    margin-top: 4px;
     font-weight: 600;
+    position: relative;
+    z-index: 1;
   }
 
   .seal-monogram {
     font-family: 'Great Vibes', cursive;
-    font-size: 1.3rem;
-    color: var(--deep-brown);
+    font-size: 1.7rem;
+    color: rgba(50,25,0,0.9);
     line-height: 1;
-    margin-top: -2px;
+    margin-top: 2px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 0 rgba(255,220,140,0.3);
   }
 
   .tap-hint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     color: var(--gold-light);
-    font-size: 0.95rem;
-    opacity: 0.7;
-    animation: blink 2s ease-in-out infinite;
+    font-size: 0.92rem;
+    opacity: 0.8;
+    animation: hint-pulse 2.5s ease-in-out infinite;
   }
 
-  @keyframes blink {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 0.3; }
+  .tap-line {
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-light));
   }
 
-  /* ─── INVITE CARD ─── */
+  .tap-hint .tap-line:last-child {
+    background: linear-gradient(to left, transparent, var(--gold-light));
+  }
+
+  @keyframes hint-pulse {
+    0%, 100% { opacity: 0.8; }
+    50%       { opacity: 0.45; }
+  }
+
+  .env-petal {
+    position: absolute;
+    pointer-events: none;
+    font-size: 0.85rem;
+    opacity: 0;
+    animation: env-fall linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes env-fall {
+    0%   { opacity: 0; transform: translateY(-10vh) rotate(0deg); }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.35; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(360deg); }
+  }
+
+  /* ─── INVITE CARD (IMAGE UI) ─── */
   #invite-card {
     display: none;
     width: 100%;
+    height: 100vh;
     max-width: 480px;
     margin: 0 auto;
-    padding: 20px 16px 40px;
+    padding: 10px 12px;
     animation: fadeInUp 1s ease forwards;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #invite-card.open {
+    display: flex;
   }
 
   @keyframes fadeInUp {
@@ -204,462 +448,53 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .card-inner {
-    background: var(--cream);
-    position: relative;
+  .card-frame {
+    width: 100%;
+    max-width: min(480px, calc((100vh - 20px) * 681 / 1024));
+    margin: 0 auto;
+    border-radius: 6px;
     overflow: hidden;
-    border-radius: 4px;
+    box-shadow:
+      0 24px 60px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(201,147,58,0.25);
   }
 
-  /* Decorative border layers */
-  .card-inner::before {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border: 1.5px solid var(--gold);
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .card-inner::after {
-    content: '';
-    position: absolute;
-    inset: 14px;
-    border: 0.5px solid rgba(201,147,58,0.4);
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  /* Parchment texture */
-  .parchment {
-    position: absolute;
-    inset: 0;
-    background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
-      radial-gradient(ellipse at 50% 0%, rgba(255,240,180,0.6) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 100%, rgba(220,180,100,0.3) 0%, transparent 60%);
-    opacity: 0.9;
-    pointer-events: none;
-  }
-
-  /* Corner ornaments */
-  .corner {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    z-index: 11;
-    pointer-events: none;
-  }
-  .corner svg { width: 100%; height: 100%; }
-  .corner.tl { top: 4px; left: 4px; }
-  .corner.tr { top: 4px; right: 4px; transform: scaleX(-1); }
-  .corner.bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
-  .corner.br { bottom: 4px; right: 4px; transform: scale(-1,-1); }
-
-  /* ─── TOP DECOR ─── */
-  .top-decor {
+  .card-image-wrap {
     position: relative;
-    z-index: 5;
-    text-align: center;
-    padding: 32px 30px 16px;
+    width: 100%;
+    line-height: 0;
   }
 
-  .banana-leaves {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: -10px;
-    position: relative;
-  }
-
-  .leaf {
-    width: 100px;
-    opacity: 0.92;
-  }
-
-  .leaf.left  { transform: rotate(-20deg) translateY(-5px); }
-  .leaf.right { transform: rotate(20deg) scaleX(-1) translateY(-5px); }
-
-  .hanging-bells {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin: -20px 0 8px;
-    position: relative;
-    z-index: 3;
-  }
-
-  .bell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: sway 3s ease-in-out infinite;
-  }
-
-  .bell:nth-child(2) { animation-delay: 0.5s; }
-  .bell:nth-child(3) { animation-delay: 1s; }
-  .bell:nth-child(4) { animation-delay: 1.5s; }
-  .bell:nth-child(5) { animation-delay: 0.3s; }
-
-  @keyframes sway {
-    0%, 100% { transform: rotate(-5deg); }
-    50%       { transform: rotate(5deg); }
-  }
-
-  .bell-chain {
-    width: 1px;
-    height: 20px;
-    background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
-  }
-
-  .bell-icon {
-    font-size: 1.2rem;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-  }
-
-  .ganesha-section {
-    text-align: center;
-    margin: 4px 0 2px;
-  }
-
-  .ganesha-icon { font-size: 2rem; display: block; }
-
-  .sri-ganesh {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.8rem;
-    color: var(--deep-brown);
-    letter-spacing: 0.3em;
-    opacity: 0.85;
-  }
-
-  /* ─── MARIGOLD GARLAND ─── */
-  .garland {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    overflow: hidden;
-    margin: 4px 0;
-  }
-
-  .marigold {
-    font-size: 1.1rem;
-    animation: bloom 4s ease-in-out infinite;
-  }
-
-  .marigold:nth-child(odd)  { animation-delay: 0.3s; color: #e8820c; }
-  .marigold:nth-child(even) { color: #f5c518; }
-
-  @keyframes bloom {
-    0%, 100% { transform: scale(1); }
-    50%       { transform: scale(1.08); }
-  }
-
-  /* ─── CONTENT ─── */
-  .content {
-    position: relative;
-    z-index: 5;
-    padding: 10px 36px 20px;
-    text-align: center;
-  }
-
-  .invitation-intro {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--deep-brown);
-    line-height: 1.8;
-    opacity: 0.9;
-    margin-bottom: 16px;
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 12px auto;
-    max-width: 200px;
-  }
-
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-  }
-
-  .divider-dot { color: var(--gold); font-size: 0.5rem; }
-
-  .groom-name {
-    font-family: 'Great Vibes', cursive;
-    font-size: 3.2rem;
-    color: var(--deep-brown);
-    line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 4px;
-  }
-
-  .parent-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.82rem;
-    color: var(--gold-dark);
-    letter-spacing: 0.05em;
-    margin-bottom: 2px;
-  }
-
-  .parent-names {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.92rem;
-    color: var(--deep-brown);
-    opacity: 0.85;
-    letter-spacing: 0.02em;
-  }
-
-  .heart-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 14px 0;
-  }
-
-  .heart-line {
-    width: 60px;
-    height: 1px;
-    background: repeating-linear-gradient(90deg, var(--gold) 0, var(--gold) 4px, transparent 4px, transparent 8px);
-  }
-
-  .heart-icon { color: var(--maroon); font-size: 1rem; }
-
-  .bride-name {
-    font-family: 'Great Vibes', cursive;
-    font-size: 3.2rem;
-    color: var(--deep-brown);
-    line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 4px;
-  }
-
-  .lotus-divider {
-    font-size: 1.3rem;
-    color: var(--gold);
-    margin: 12px 0;
+  .card-image-wrap img {
+    width: 100%;
+    height: auto;
     display: block;
   }
 
-  .special-message {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.9rem;
-    color: var(--deep-brown);
-    line-height: 1.9;
-    opacity: 0.88;
-    margin-bottom: 18px;
-  }
-
-  /* ─── DATE SECTION ─── */
-  .date-section {
-    margin: 16px 0;
-    text-align: center;
-  }
-
-  .save-date-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.4em;
-    color: var(--gold-dark);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .date-box {
+  /* Mapped to venue line on invitation-card.png (681×1024) */
+  .venue-replace {
+    position: absolute;
+    top: 81.84%;
+    left: 4.5%;
+    right: 4.5%;
+    height: 3.91%;
+    background: #f4dbab;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0;
-    border: 1px solid var(--gold);
-    max-width: 220px;
-    margin: 0 auto 6px;
+    z-index: 2;
+    overflow: hidden;
   }
 
-  .date-cell {
-    padding: 8px 16px;
-    font-family: 'Cinzel', serif;
-  }
-
-  .date-month { font-size: 0.75rem; letter-spacing: 0.2em; color: var(--gold-dark); text-transform: uppercase; }
-  .date-day   { font-size: 2.4rem; color: var(--deep-brown); font-weight: 500; line-height: 1; }
-  .date-year  { font-size: 0.75rem; color: var(--gold-dark); letter-spacing: 0.1em; }
-
-  .date-divider-v {
-    width: 1px;
-    height: 50px;
-    background: var(--gold);
-    opacity: 0.6;
-  }
-
-  .day-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--deep-brown);
-    letter-spacing: 0.1em;
-  }
-
-  .time-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.9rem;
-    color: var(--deep-brown);
-    opacity: 0.8;
-    margin-top: 4px;
-  }
-
-  /* ─── VENUE ─── */
-  .venue-section {
-    margin: 16px 0;
-    padding: 14px 20px;
-    border-top: 1px solid rgba(201,147,58,0.4);
-    border-bottom: 1px solid rgba(201,147,58,0.4);
-  }
-
-  .venue-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    color: var(--deep-brown);
-    text-transform: uppercase;
+  .venue-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .venue-address {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    color: var(--deep-brown);
-    opacity: 0.75;
-    line-height: 1.6;
-  }
-
-  .map-link {
-    display: inline-block;
-    margin-top: 8px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--gold-dark);
-    text-decoration: none;
-    border-bottom: 1px solid var(--gold-dark);
-    padding-bottom: 1px;
+    font-size: 13px;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .map-link:hover { color: var(--gold); }
-
-  /* ─── RSVP ─── */
-  .rsvp-section {
-    margin: 14px 0 10px;
-  }
-
-  .rsvp-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    color: var(--gold-dark);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .contacts {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .contact-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .contact-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    color: var(--deep-brown);
-    font-style: italic;
-  }
-
-  .contact-phone {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    color: var(--gold-dark);
-    letter-spacing: 0.05em;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .contact-phone:hover { color: var(--maroon); }
-
-  /* ─── BOTTOM DECOR ─── */
-  .bottom-decor {
-    position: relative;
-    z-index: 5;
-    padding: 10px 20px 20px;
-    text-align: center;
-  }
-
-  .diyas {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 8px;
-    padding: 0 10px;
-  }
-
-  .diya { font-size: 2.2rem; }
-  .diya.left  { animation: flicker 2s ease-in-out infinite; }
-  .diya.right { animation: flicker 2s ease-in-out infinite 0.5s; }
-
-  @keyframes flicker {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.85; transform: scale(0.97); }
-  }
-
-  .kalash-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    margin-bottom: 6px;
-  }
-
-  .kalash { font-size: 1.8rem; }
-
-  .bottom-marigolds {
-    display: flex;
-    justify-content: center;
-    gap: 2px;
-    overflow: hidden;
-  }
-
-  .bottom-lotus {
-    font-size: 1.5rem;
-    color: var(--gold);
-    margin: 6px 0 0;
-    display: block;
-  }
-
-  .footer-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.75rem;
-    color: var(--deep-brown);
-    opacity: 0.55;
-    margin-top: 8px;
-    letter-spacing: 0.05em;
+    color: #635107;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   /* Floating petals */
@@ -684,12 +519,40 @@
 
 <!-- ══════════════ ENVELOPE SCREEN ══════════════ -->
 <div id="envelope-screen">
+  <div class="env-bg">
+    <div class="env-glow"></div>
+    <div class="env-pattern"></div>
+    <div id="env-sparkles"></div>
+    <div id="env-petals"></div>
+  </div>
+
+  <div class="env-corner tl">
+    <svg viewBox="0 0 80 80" fill="none"><path d="M4 4 L4 40 Q4 4 40 4" stroke="#c9933a" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="#c9933a"/><path d="M10 4 Q4 4 4 10" stroke="#c9933a" stroke-width="0.7"/></svg>
+  </div>
+  <div class="env-corner tr">
+    <svg viewBox="0 0 80 80" fill="none"><path d="M4 4 L4 40 Q4 4 40 4" stroke="#c9933a" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="#c9933a"/><path d="M10 4 Q4 4 4 10" stroke="#c9933a" stroke-width="0.7"/></svg>
+  </div>
+  <div class="env-corner bl">
+    <svg viewBox="0 0 80 80" fill="none"><path d="M4 4 L4 40 Q4 4 40 4" stroke="#c9933a" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="#c9933a"/></svg>
+  </div>
+  <div class="env-corner br">
+    <svg viewBox="0 0 80 80" fill="none"><path d="M4 4 L4 40 Q4 4 40 4" stroke="#c9933a" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="#c9933a"/></svg>
+  </div>
+
   <div class="envelope-wrap">
+    <div class="env-lotus">🪷</div>
+    <div class="env-ganesh">|| श्री गणेशाय नमः ||</div>
     <div class="envelope-title">Wedding Invitation</div>
+    <div class="env-couple">Rajukumar <span>&</span> Mugdha</div>
+    <div class="env-date">6 July 2026</div>
+
+    <div class="env-divider"><span>✦</span></div>
 
     <div class="seal-container" onclick="openInvite()">
       <div class="seal-ring"></div>
       <div class="seal-ring"></div>
+      <div class="seal-ring"></div>
+      <div class="seal-outer"></div>
       <div class="seal">
         <span class="seal-ganesha">🪔</span>
         <span class="seal-monogram">R & M</span>
@@ -697,187 +560,55 @@
       </div>
     </div>
 
-    <div class="tap-hint">✦ tap the seal to open ✦</div>
+    <div class="tap-hint">
+      <span class="tap-line"></span>
+      <span>tap the seal to open</span>
+      <span class="tap-line"></span>
+    </div>
   </div>
 </div>
 
 <!-- ══════════════ INVITE CARD ══════════════ -->
 <div id="invite-card">
-  <div class="card-inner">
-    <div class="parchment"></div>
-
-    <!-- Corner ornaments -->
-    <div class="corner tl">
-      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4 L4 28 Q4 4 28 4 Z" fill="none" stroke="#c9933a" stroke-width="1"/>
-        <path d="M4 4 L4 22 Q4 4 22 4" fill="none" stroke="#c9933a" stroke-width="0.6" opacity="0.5"/>
-        <circle cx="4" cy="4" r="2" fill="#c9933a"/>
-        <path d="M12 4 Q4 4 4 12" stroke="#c9933a" stroke-width="0.8" fill="none" opacity="0.6"/>
-        <text x="8" y="20" font-size="8" fill="#c9933a" opacity="0.5" font-family="serif">✦</text>
-      </svg>
-    </div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
-
-    <!-- ── TOP DECOR ── -->
-    <div class="top-decor">
-      <div class="banana-leaves">
-        <img class="leaf left" src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png"
-             onerror="this.style.display='none'" alt="leaf">
-        <div style="flex:1"></div>
-        <img class="leaf right" src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png"
-             onerror="this.style.display='none'" alt="leaf">
-      </div>
-
-      <div class="hanging-bells">
-        <div class="bell"><div class="bell-chain"></div><span class="bell-icon">🔔</span></div>
-        <div class="bell"><div class="bell-chain" style="height:30px"></div><span class="bell-icon">🔔</span></div>
-        <div class="bell"><div class="bell-chain" style="height:40px"></div><span class="bell-icon">🔔</span></div>
-        <div class="bell"><div class="bell-chain" style="height:30px"></div><span class="bell-icon">🔔</span></div>
-        <div class="bell"><div class="bell-chain"></div><span class="bell-icon">🔔</span></div>
-      </div>
-
-      <div class="ganesha-section">
-        <span class="ganesha-icon">🐘</span>
-        <div class="sri-ganesh">|| श्री गणेशाय नमः ||</div>
-      </div>
-
-      <div class="garland">
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span>
+  <div class="card-frame">
+    <div class="card-image-wrap">
+      <img src="invitation-card.png" alt="Rajukumar & Mugdha — Wedding Save the Date, 6th July 2026">
+      <div class="venue-replace" aria-label="Venue: The Ginger Airport Hotel">
+        <span class="venue-text">The Ginger Airport Hotel</span>
       </div>
     </div>
-
-    <!-- ── MAIN CONTENT ── -->
-    <div class="content">
-
-      <div class="invitation-intro">
-        Two families, two traditions,<br>
-        one beautiful journey.<br>
-        With joy in our hearts, we<br>
-        invite you to celebrate the wedding of
-      </div>
-
-      <div class="divider">
-        <div class="divider-line"></div>
-        <div class="divider-dot">◆</div>
-        <div class="divider-line"></div>
-      </div>
-
-      <div class="groom-name">Rajukumar Jha</div>
-      <div class="parent-label">son of</div>
-      <div class="parent-names">Shri Mohan Jha &amp; Smt. Anju Jha</div>
-
-      <div class="heart-divider">
-        <div class="heart-line"></div>
-        <span class="heart-icon">♥</span>
-        <div class="heart-line"></div>
-      </div>
-
-      <div class="bride-name">Mugdha Bhatwadekar</div>
-      <div class="parent-label">daughter of</div>
-      <div class="parent-names">Shri Vivek Bhatwadekar &amp; Smt. Deepa Bhatwadekar</div>
-
-      <span class="lotus-divider">🪷</span>
-
-      <div class="special-message">
-        We are happy and honored to share<br>
-        this beautiful beginning with you.<br>
-        Your presence will make our wedding<br>
-        ceremony more special and unforgettable.
-      </div>
-
-      <!-- DATE -->
-      <div class="date-section">
-        <div class="save-date-label">Save the Date</div>
-        <div class="date-box">
-          <div class="date-cell">
-            <div class="date-month">July</div>
-          </div>
-          <div class="date-divider-v"></div>
-          <div class="date-cell">
-            <div class="date-day">06</div>
-          </div>
-          <div class="date-divider-v"></div>
-          <div class="date-cell">
-            <div class="date-year">2026</div>
-          </div>
-        </div>
-        <div class="day-name" style="margin-top:8px;">Monday</div>
-        <div class="time-label">3:00 PM onwards</div>
-      </div>
-
-      <div class="divider"><div class="divider-line"></div><div class="divider-dot">◆</div><div class="divider-line"></div></div>
-
-      <!-- VENUE -->
-      <div class="venue-section">
-        <div class="venue-name">The Ginger Hotel, Andheri</div>
-        <div class="venue-address">
-          Nehru Road, Plot No. 10 &amp; 11,<br>
-          Western Express Hwy, Navpada,<br>
-          Vile Parle East, Mumbai – 400099
-        </div>
-        <a class="map-link"
-           href="https://maps.google.com/?q=Ginger+Mumbai+Airport,+Nehru+Road,+Vile+Parle+East,+Mumbai+400099"
-           target="_blank">
-          ✦ View on Map ✦
-        </a>
-      </div>
-
-      <div class="divider"><div class="divider-line"></div><div class="divider-dot">◆</div><div class="divider-line"></div></div>
-
-      <!-- RSVP -->
-      <div class="rsvp-section">
-        <div class="rsvp-label">RSVP</div>
-        <div class="contacts">
-          <div class="contact-card">
-            <span class="contact-name">Nitin Jha</span>
-            <a class="contact-phone" href="tel:+917715902807">📞 77159 02807</a>
-          </div>
-          <div class="contact-card">
-            <span class="contact-name">Govind Jha</span>
-            <a class="contact-phone" href="tel:+918433602912">📞 84336 02912</a>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /content -->
-
-    <!-- ── BOTTOM DECOR ── -->
-    <div class="bottom-decor">
-      <div class="diyas">
-        <span class="diya left">🪔</span>
-        <span style="font-size:1.2rem; color:var(--gold); font-family:'Great Vibes',cursive;">R &amp; M</span>
-        <span class="diya right">🪔</span>
-      </div>
-
-      <div class="kalash-row">
-        <span class="kalash">🏺</span>
-        <span class="kalash">🏺</span>
-      </div>
-
-      <div class="bottom-marigolds">
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span><span class="marigold">🌸</span>
-        <span class="marigold">🌼</span>
-      </div>
-
-      <span class="bottom-lotus">🪷</span>
-
-      <div class="footer-text">Formal invitation to follow</div>
-    </div>
-
-  </div><!-- /card-inner -->
-</div><!-- /invite-card -->
+  </div>
+</div>
 
 <script>
+  (function initEnvelopeDecor() {
+    const sparkles = document.getElementById('env-sparkles');
+    const petals   = document.getElementById('env-petals');
+    if (!sparkles || !petals) return;
+
+    for (let i = 0; i < 24; i++) {
+      const s = document.createElement('div');
+      s.className = 'env-sparkle';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top  = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 3) + 's';
+      s.style.animationDuration = (2 + Math.random() * 2) + 's';
+      sparkles.appendChild(s);
+    }
+
+    const icons = ['🌸','🌼','✨','🏵️'];
+    for (let i = 0; i < 10; i++) {
+      const p = document.createElement('div');
+      p.className = 'env-petal';
+      p.textContent = icons[Math.floor(Math.random() * icons.length)];
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 8) + 's';
+      p.style.fontSize = (0.6 + Math.random() * 0.7) + 'rem';
+      petals.appendChild(p);
+    }
+  })();
+
   function openInvite() {
     const envScreen = document.getElementById('envelope-screen');
     const card      = document.getElementById('invite-card');
@@ -886,13 +617,35 @@
 
     setTimeout(() => {
       envScreen.style.display = 'none';
-      card.style.display = 'block';
+      card.classList.add('open');
+      document.body.classList.add('invite-open');
+      fitVenueText();
       spawnPetals();
     }, 800);
   }
 
+  function fitVenueText() {
+    const wrap = document.querySelector('.card-image-wrap');
+    const text = document.querySelector('.venue-text');
+    const img  = document.querySelector('.card-image-wrap img');
+    if (!wrap || !text || !img) return;
+
+    const apply = () => {
+      const h = wrap.clientHeight;
+      let size = h * 0.0234;
+      text.style.fontSize = size + 'px';
+      while (text.scrollWidth > wrap.clientWidth * 0.9 && size > 7) {
+        size -= 0.25;
+        text.style.fontSize = size + 'px';
+      }
+    };
+
+    if (img.complete) apply();
+    else img.addEventListener('load', apply, { once: true });
+    window.addEventListener('resize', apply);
+  }
+
   function spawnPetals() {
-    const cardEl = document.getElementById('invite-card');
     const petals = ['🌸','🌺','🌼','🏵️','✨'];
     for (let i = 0; i < 18; i++) {
       const p = document.createElement('div');
